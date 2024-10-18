@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <h1>Generar Plantilla Excel</h1>
+    <h1>Generar Plantilla Excel 2</h1>
 
     <!-- Formulario para subir el archivo -->
     <form action="/" method="POST" enctype="multipart/form-data">
@@ -31,9 +31,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for idx, row in data %}
+                {% for row in data %}
                 <tr>
-                    <td><input type="checkbox" name="rows" value="{{ idx }}"></td>
+                    <td><input type="checkbox" name="rows" value="{{ loop.index0 }}"></td>
                     <td>{{ row['Name'] }}</td>
                     <td>{{ row['Surname'] }}</td>
                     <td>{{ row['E-mail'] }}</td>

@@ -54,6 +54,10 @@ def process():
     for row in selected_rows:
         idx = int(row)  # Convertir el índice de string a entero
 
+        # Validación del índice
+        if idx < 0 or idx >= len(df):
+            return f"Índice {idx} está fuera de rango.", 400
+
         name = df.iloc[idx]['Name']
         surname = df.iloc[idx]['Surname']
         email = df.iloc[idx]['E-mail']

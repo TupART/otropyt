@@ -26,9 +26,11 @@ def index():
             
             # Leer el archivo con pandas
             df = pd.read_excel(file_path, header=1)  # Nombres de columnas en la fila 2 (índice 1)
-            
-            # Seleccionar todas las filas para mostrar en la tabla
-            data = df[['Name', 'Surname', 'E-mail', 'Market', 'Va a ser PCC?', 'B2E User Name']].tail(25).to_dict(orient='records')
+
+            # Obtener solo los últimos 25 registros
+            global last_data  # Guardar la referencia a los últimos 25 registros globalmente
+            last_data = df[['Name', 'Surname', 'E-mail', 'Market', 'Va a ser PCC?', 'B2E User Name']].tail(25)
+            data = last_data.to_dict(orient='records')
             
             return render_template('index.html', data=data)
     
@@ -37,10 +39,11 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     selected_rows = request.form.getlist('rows')  # Obtener filas seleccionadas
+    selected_indices = [int(row) for row in selected_rows]  # Convertir a enteros
 
-    # Cargar el archivo original
-    file_path = os.path.join(tempfile.gettempdir(), os.listdir(tempfile.gettempdir())[0])
-    df = pd.read_excel(file_path, header=1)
+    # Validar que los índices estén dentro del rango de los últimos 25 registros
+    if any(idx < 0 or idx >= len(last_data) for idx in selected_indices):
+        return "Índice seleccionado está fuera de rango.", 400
 
     # Cargar la plantilla 'PlantillaSTEP4.xlsx'
     plantilla = 'PlantillaSTEP4.xlsx'
@@ -51,19 +54,14 @@ def process():
     destination_row = 7  # Comenzar desde la fila 7 en la plantilla
 
     # Procesar las filas seleccionadas y rellenar la plantilla
-    for row in selected_rows:
-        idx = int(row)  # Convertir el índice de string a entero
-
-        # Validación del índice
-        if idx < 0 or idx >= len(df):
-            return f"Índice {idx} está fuera de rango.", 400
-
-        name = df.iloc[idx]['Name']
-        surname = df.iloc[idx]['Surname']
-        email = df.iloc[idx]['E-mail']
-        market = df.iloc[idx]['Market']
-        pcc_status = df.iloc[idx]['Va a ser PCC?']
-        b2e_username = df.iloc[idx]['B2E User Name']
+    for idx in selected_indices:
+        # Obtener los datos de last_data usando el índice
+        name = last_data.iloc[idx]['Name']
+        surname = last_data.iloc[idx]['Surname']
+        email = last_data.iloc[idx]['E-mail']
+        market = last_data.iloc[idx]['Market']
+        pcc_status = last_data.iloc[idx]['Va a ser PCC?']
+        b2e_username = last_data.iloc[idx]['B2E User Name']
 
         # Rellenar las columnas C, D y E
         ws[f'C{destination_row}'] = name

@@ -28,7 +28,7 @@ def index():
             df = pd.read_excel(file_path, header=1)  # Nombres de columnas en la fila 2 (índice 1)
             
             # Seleccionar todas las filas para mostrar en la tabla
-            data = df[['Name', 'Surname', 'E-mail', 'Market', 'Va a ser PCC?', 'B2E User Name']].to_dict(orient='records')
+            data = df[['Name', 'Surname', 'E-mail', 'Market', 'Va a ser PCC?', 'B2E User Name']].tail(25).to_dict(orient='records')
             
             return render_template('index.html', data=data)
     

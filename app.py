@@ -3,10 +3,9 @@ import pandas as pd
 import openpyxl
 from werkzeug.utils import secure_filename
 import os
+import tempfile
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -18,8 +17,10 @@ def index():
         if file.filename == '':
             return 'No selected file'
         if file:
+            # Usar un directorio temporal para guardar el archivo subido
+            temp_dir = tempfile.mkdtemp()  # Crea un directorio temporal
             filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_path = os.path.join(temp_dir, filename)
             file.save(file_path)
 
             # Leer archivo subido
@@ -35,8 +36,9 @@ def index():
 def process():
     selected_rows = request.form.getlist('rows')
 
-    # Cargar archivo subido previamente
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.listdir(app.config['UPLOAD_FOLDER'])[0])
+    # Usar un directorio temporal para cargar el archivo subido
+    temp_dir = tempfile.mkdtemp()
+    file_path = os.path.join(temp_dir, os.listdir(temp_dir)[0])
     df = pd.read_excel(file_path)
 
     # Cargar la plantilla 'PlantillaSTEP4.xlsx'
@@ -107,14 +109,12 @@ def process():
         elif pcc_status == 'TL':
             ws[f'V{row_num}'] = "Team Leader"
 
-    # Guardar la plantilla con los datos rellenados
-    output_file = 'PlantillaSTEP4_Rellenada.xlsx'
-    wb.save(output_file)
+    # Guardar la plantilla con los datos rellenados en el directorio temporal
+    output_file_path = os.path.join(temp_dir, 'PlantillaSTEP4_Rellenada.xlsx')
+    wb.save(output_file_path)
 
     # Enviar el archivo descargable
-    return send_file(output_file, as_attachment=True)
+    return send_file(output_file_path, as_attachment=True)
 
 if __name__ == '__main__':
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)

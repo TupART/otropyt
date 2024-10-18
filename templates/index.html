@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rellenar Plantilla</title>
+</head>
+<body>
+    <h1>Sube tu archivo Excel</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx">
+        <button type="submit">Subir y procesar</button>
+    </form>
+
+    {% if names %}
+    <form action="/process" method="POST">
+        <h2>Selecciona las filas que deseas rellenar:</h2>
+        {% for idx, name in enumerate(names) %}
+            <input type="checkbox" name="rows" value="{{ idx }}"> {{ name[0] }} {{ name[1] }}<br>
+        {% endfor %}
+        <button type="submit">Rellenar Plantilla</button>
+    </form>
+    {% endif %}
+</body>
+</html>

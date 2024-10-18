@@ -17,14 +17,15 @@ def index():
         if file.filename == '':
             return 'No selected file'
         if file:
-            # Usar un directorio temporal para guardar el archivo subido
-            temp_dir = tempfile.mkdtemp()  # Crea un directorio temporal
             filename = secure_filename(file.filename)
-            file_path = os.path.join(temp_dir, filename)
-            file.save(file_path)
+            
+            # Guardar en un archivo temporal
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                file_path = temp_file.name
+                file.save(file_path)
 
-            # Leer archivo subido
-            df = pd.read_excel(file_path)
+            # Leer archivo subido (nombres de columnas en la fila 2)
+            df = pd.read_excel(file_path, header=1)
 
             # Crear una lista de checkboxes con Name y Surname
             names = df[['Name', 'Surname']].dropna()
@@ -36,10 +37,9 @@ def index():
 def process():
     selected_rows = request.form.getlist('rows')
 
-    # Usar un directorio temporal para cargar el archivo subido
-    temp_dir = tempfile.mkdtemp()
-    file_path = os.path.join(temp_dir, os.listdir(temp_dir)[0])
-    df = pd.read_excel(file_path)
+    # Cargar archivo subido previamente
+    file_path = os.path.join(tempfile.gettempdir(), os.listdir(tempfile.gettempdir())[0])
+    df = pd.read_excel(file_path, header=1)
 
     # Cargar la plantilla 'PlantillaSTEP4.xlsx'
     plantilla = 'PlantillaSTEP4.xlsx'
@@ -109,12 +109,12 @@ def process():
         elif pcc_status == 'TL':
             ws[f'V{row_num}'] = "Team Leader"
 
-    # Guardar la plantilla con los datos rellenados en el directorio temporal
-    output_file_path = os.path.join(temp_dir, 'PlantillaSTEP4_Rellenada.xlsx')
-    wb.save(output_file_path)
+    # Guardar la plantilla con los datos rellenados
+    output_file = 'PlantillaSTEP4_Rellenada.xlsx'
+    wb.save(output_file)
 
     # Enviar el archivo descargable
-    return send_file(output_file_path, as_attachment=True)
+    return send_file(output_file, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

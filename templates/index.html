@@ -6,26 +6,47 @@
     <title>Subir archivo</title>
 </head>
 <body>
-    <h1>Subir archivo y seleccionar nombres1</h1>
-    
+
+    <h1>Generar Plantilla Excel</h1>
+
+    <!-- Formulario para subir el archivo -->
     <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Subir archivo">
+        <input type="file" name="file" accept=".xlsx">
+        <input type="submit" value="Cargar archivo">
     </form>
 
-    {% if names %}
+    {% if data %}
+    <!-- Tabla para mostrar los datos y seleccionar filas -->
     <form action="/process" method="POST">
-        <h2>Seleccionar filas</h2>
-        <ul>
-            {% for idx, name in names %}
-                <li>
-                    <input type="checkbox" name="rows" value="{{ loop.index0 }}">
-                    {{ name[0] }} {{ name[1] }}
-                </li>
-            {% endfor %}
-        </ul>
-        <input type="submit" value="Procesar selección">
+        <table>
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Market</th>
+                    <th>Va a ser PCC?</th>
+                    <th>B2E User Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for idx, row in data %}
+                <tr>
+                    <td><input type="checkbox" name="rows" value="{{ idx }}"></td>
+                    <td>{{ row['Name'] }}</td>
+                    <td>{{ row['Surname'] }}</td>
+                    <td>{{ row['E-mail'] }}</td>
+                    <td>{{ row['Market'] }}</td>
+                    <td>{{ row['Va a ser PCC?'] }}</td>
+                    <td>{{ row['B2E User Name'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Generar Plantilla">
     </form>
     {% endif %}
+
 </body>
 </html>

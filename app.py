@@ -172,8 +172,12 @@ def process():
         # Incrementar destination_row para la siguiente inserción
         destination_row += 1
 
-    # Guardar el archivo actualizado
-    output_file = os.path.join(tempfile.gettempdir(), 'PlantillaSTEP4_Rellenada.xlsx')
+    # Formatear la fecha y hora
+    now = datetime.now()
+    formatted_date = now.strftime("%Y%m%d_%H%M")  # Formato YYYYMMDD_HHMM
+
+    # Guardar el archivo actualizado con el nuevo nombre
+    output_file = os.path.join(tempfile.gettempdir(), f'D365_STEP4_CCH_{formatted_date}.xlsx')
     wb.save(output_file)
 
     # Enviar el archivo descargable

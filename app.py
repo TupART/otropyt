@@ -47,6 +47,9 @@ def process():
     wb = openpyxl.load_workbook(plantilla)
     ws = wb.active
 
+    # Contador para la fila de destino
+    destination_row = 7  # Comenzar desde la fila 7 en la plantilla
+
     # Procesar las filas seleccionadas y rellenar la plantilla
     for row in selected_rows:
         idx = int(row)  # Convertir el índice de string a entero
@@ -58,22 +61,25 @@ def process():
         pcc_status = df.iloc[idx]['Va a ser PCC?']
         b2e_username = df.iloc[idx]['B2E User Name']
 
-        row_num = 7 + idx  # Comenzar desde la fila 7
-        ws[f'C{row_num}'] = name
-        ws[f'D{row_num}'] = surname
-        ws[f'E{row_num}'] = email
+        # Usar destination_row para colocar los datos en la plantilla
+        ws[f'C{destination_row}'] = name
+        ws[f'D{destination_row}'] = surname
+        ws[f'E{destination_row}'] = email
 
         # Condiciones basadas en "Market" y "PCC Status"
         if pcc_status == 'Y' and market == 'DACH':
-            ws[f'F{row_num}'] = "/+4940210918145"
-            ws[f'G{row_num}'] = "D_PCC"
-            ws[f'H{row_num}'] = "Team_D_CCH_PCC_1"
+            ws[f'F{destination_row}'] = "/+4940210918145"
+            ws[f'G{destination_row}'] = "D_PCC"
+            ws[f'H{destination_row}'] = "Team_D_CCH_PCC_1"
         # Agregar más condiciones para otros mercados y estados PCC...
 
-        ws[f'L{row_num}'] = "Y" if pcc_status == 'Y' else "N"
-        ws[f'Q{row_num}'] = b2e_username
-        ws[f'R{row_num}'] = b2e_username
-        ws[f'V{row_num}'] = "Agent" if pcc_status in ['Y', 'N', 'DS'] else "Team Leader"
+        ws[f'L{destination_row}'] = "Y" if pcc_status == 'Y' else "N"
+        ws[f'Q{destination_row}'] = b2e_username
+        ws[f'R{destination_row}'] = b2e_username
+        ws[f'V{destination_row}'] = "Agent" if pcc_status in ['Y', 'N', 'DS'] else "Team Leader"
+
+        # Incrementar destination_row para la siguiente inserción
+        destination_row += 1
 
     # Guardar el archivo actualizado
     output_file = os.path.join(tempfile.gettempdir(), 'PlantillaSTEP4_Rellenada.xlsx')

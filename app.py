@@ -28,8 +28,8 @@ def index():
             df = pd.read_excel(file_path, header=1)
 
             # Crear una lista de checkboxes con Name y Surname
-            names = df[['Name', 'Surname']].dropna()
-            return render_template('index.html', names=names.values)
+            names = df[['Name', 'Surname']].dropna().values.tolist()  # Convertir a lista de Python
+            return render_template('index.html', names=names)
 
     return render_template('index.html')
 

@@ -157,7 +157,7 @@ def process():
             ws[f'L{destination_row}'] = "N"
 
         # Rellenar columnas Q y R (CTI User y TTG UserID 1)
-        ws[f'Q{destination_row}'] = b2e_username
+        ws[f'Q{destination_row}'] = email
         ws[f'R{destination_row}'] = b2e_username
 
         # Rellenar columna V (Campaign Level)

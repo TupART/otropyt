@@ -72,13 +72,13 @@ def process():
         # Rellenar columna F (Primary phone)
         if pcc_status == 'Y':
             if market == 'DACH':
-                ws[f'F{destination_row}'] = "/+4940210918145 /+43122709858 /+41445295828"
+                ws[f'F{destination_row}'] = "+4940210918145"
             elif market == 'France':
-                ws[f'F{destination_row}'] = "/+33180037979"
+                ws[f'F{destination_row}'] = "+33180037979"
             elif market == 'Spain':
-                ws[f'F{destination_row}'] = "/+34932952130"
+                ws[f'F{destination_row}'] = "+34932952130"
             elif market == 'Italy':
-                ws[f'F{destination_row}'] = "/+390109997099"
+                ws[f'F{destination_row}'] = "+390109997099"
         else:
             ws[f'F{destination_row}'] = ""
 
@@ -116,59 +116,80 @@ def process():
             elif market == 'Spain':
                 ws[f'G{destination_row}'] = "E_Outbound"
 
-        # Rellenar columna H (Team)
+        # Rellenar columna H (Workgroup WA)
         if pcc_status == 'Y':
             if market == 'DACH':
-                ws[f'H{destination_row}'] = "Team_D_CCH_PCC_1"
+                ws[f'H{destination_row}'] = "D_WAPCC"
             elif market == 'France':
-                ws[f'H{destination_row}'] = "Team_F_CCH_PCC_1"
+                ws[f'H{destination_row}'] = "F_WAPCC"
             elif market == 'Spain':
-                ws[f'H{destination_row}'] = "Team_E_CCH_PCC_1"
+                ws[f'H{destination_row}'] = "E_WAPCC"
             elif market == 'Italy':
-                ws[f'H{destination_row}'] = "Team_I_CCH_PCC_1"
-        elif pcc_status == 'N':
-            if market == 'DACH':
-                ws[f'H{destination_row}'] = "Team_D_CCH_B2C_1"
-            elif market == 'France':
-                ws[f'H{destination_row}'] = "Team_F_CCH_B2C_1"
-            elif market == 'Spain':
-                ws[f'H{destination_row}'] = "Team_E_CCH_B2C_1"
-        elif pcc_status == 'TL':
-            if market == 'DACH':
-                ws[f'H{destination_row}'] = "Team_D_CCH_PCC_1"
-            elif market == 'France':
-                ws[f'H{destination_row}'] = "Team_F_CCH_PCC_1"
-            elif market == 'Spain':
-                ws[f'H{destination_row}'] = "Team_E_CCH_PCC_1"
-            elif market == 'Italy':
-                ws[f'H{destination_row}'] = "Team_I_CCH_PCC_1"
+                ws[f'H{destination_row}'] = "I_WAPCC"
         elif pcc_status == 'DS':
             if market == 'DACH':
-                ws[f'H{destination_row}'] = "Team_D_CCH_B2C_1"
+                ws[f'H{destination_row}'] = "D_WAPCC"
             elif market == 'France':
-                ws[f'H{destination_row}'] = "Team_F_CCH_B2C_1"
+                ws[f'H{destination_row}'] = "F_WAPCC"
             elif market == 'Spain':
-                ws[f'H{destination_row}'] = "Team_E_CCH_B2C_1"
+                ws[f'H{destination_row}'] = "E_WAPCC"
+            elif market == 'Italy':
+                ws[f'H{destination_row}'] = "I_WAPCC"
 
-        # Rellenar columna L (Is PCC)
+        # Rellenar columna I (Team)
         if pcc_status == 'Y':
-            ws[f'L{destination_row}'] = "Y"
+            if market == 'DACH':
+                ws[f'I{destination_row}'] = "Team_D_CCH_PCC_1"
+            elif market == 'France':
+                ws[f'I{destination_row}'] = "Team_F_CCH_PCC_1"
+            elif market == 'Spain':
+                ws[f'I{destination_row}'] = "Team_E_CCH_PCC_1"
+            elif market == 'Italy':
+                ws[f'I{destination_row}'] = "Team_I_CCH_PCC_1"
+        elif pcc_status == 'N':
+            if market == 'DACH':
+                ws[f'I{destination_row}'] = "Team_D_CCH_B2C_1"
+            elif market == 'France':
+                ws[f'I{destination_row}'] = "Team_F_CCH_B2C_1"
+            elif market == 'Spain':
+                ws[f'I{destination_row}'] = "Team_E_CCH_B2C_1"
+        elif pcc_status == 'TL':
+            if market == 'DACH':
+                ws[f'I{destination_row}'] = "Team_D_CCH_PCC_1"
+            elif market == 'France':
+                ws[f'I{destination_row}'] = "Team_F_CCH_PCC_1"
+            elif market == 'Spain':
+                ws[f'I{destination_row}'] = "Team_E_CCH_PCC_1"
+            elif market == 'Italy':
+                ws[f'I{destination_row}'] = "Team_I_CCH_PCC_1"
+        elif pcc_status == 'DS':
+            if market == 'DACH':
+                ws[f'I{destination_row}'] = "Team_D_CCH_B2C_1"
+            elif market == 'France':
+                ws[f'I{destination_row}'] = "Team_F_CCH_B2C_1"
+            elif market == 'Spain':
+                ws[f'I{destination_row}'] = "Team_E_CCH_B2C_1"
+
+        # Rellenar columna M (Is PCC)
+        if pcc_status == 'Y':
+            ws[f'M{destination_row}'] = "Y"
         else:
-            ws[f'L{destination_row}'] = "N"
+            ws[f'M{destination_row}'] = "N"
 
-        # Rellenar columnas Q y R (CTI User y TTG UserID 1)
+        # Rellenar columnas Q, R y S (CCRM, CTI User y TTG UserID 1)
         ws[f'Q{destination_row}'] = email
-        ws[f'R{destination_row}'] = b2e_username
+        ws[f'R{destination_row}'] = email
+        ws[f'S{destination_row}'] = b2e_username
 
-        # Rellenar columna V (Campaign Level)
+        # Rellenar columna W (Campaign Level)
         if pcc_status == 'Y':
-            ws[f'V{destination_row}'] = "Agent"
+            ws[f'W{destination_row}'] = "Agent"
         elif pcc_status == 'N':
-            ws[f'V{destination_row}'] = "Agent"
+            ws[f'W{destination_row}'] = "Agent"
         elif pcc_status == 'TL':
-            ws[f'V{destination_row}'] = "Team Leader"
+            ws[f'W{destination_row}'] = "Team Leader"
         elif pcc_status == 'DS':
-            ws[f'V{destination_row}'] = "Agent"
+            ws[f'W{destination_row}'] = "Agent"
 
         # Incrementar destination_row para la siguiente inserción
         destination_row += 1
